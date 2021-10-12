@@ -1,0 +1,8 @@
+﻿
+Om de database aan te maken:
+
+Enkel een correcte connection string is nodig - Pas de database naam in de connection string aan
+dan
+	Add-Migration
+	Update-Database -verbose
+Automatisch wordt de database aangemaakt (geen manuele db aanmaak is meer nodig via SSMS).
