@@ -6,3 +6,11 @@ dan
 	Add-Migration
 	Update-Database -verbose
 Automatisch wordt de database aangemaakt (geen manuele db aanmaak is meer nodig via SSMS).
+
+
+UserController methodes testen:
+- Run de applicatie
+- Plak de url in postman en selecteer de juiste Http verb
+
+Bij Post ga je naar de Body section en dan selecteer je 'raw' en bij dropdown 'JSON'
+Object in de vorm van JSON ingeven en verzenden!
