@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30621.155
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "UserService", "UserService\UserService.csproj", "{94E7A019-208E-41A7-B7BF-F67683E1C39C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APIGateway", "APIGateway\APIGateway.csproj", "{FC76DCFB-768D-47F9-B69F-6611843411FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APIGateway", "APIGateway\APIGateway.csproj", "{FC76DCFB-768D-47F9-B69F-6611843411FA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookService", "BookService\BookService.csproj", "{A4255A04-246E-41A9-A438-84C73E171040}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{FC76DCFB-768D-47F9-B69F-6611843411FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FC76DCFB-768D-47F9-B69F-6611843411FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FC76DCFB-768D-47F9-B69F-6611843411FA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A4255A04-246E-41A9-A438-84C73E171040}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A4255A04-246E-41A9-A438-84C73E171040}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A4255A04-246E-41A9-A438-84C73E171040}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A4255A04-246E-41A9-A438-84C73E171040}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
