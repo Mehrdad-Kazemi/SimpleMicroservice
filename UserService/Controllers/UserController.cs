@@ -15,24 +15,24 @@ namespace UserService.Controllers
     [ApiController]
     public class UserController : ControllerBase
     {
-        DatabaseContext databaseContext;
+        DatabaseContext dbContext;
         public UserController()
         {
-            databaseContext = new DatabaseContext();
+            dbContext = new DatabaseContext();
         }
 
         // GET: api/user
         [HttpGet]
         public IEnumerable<User> Get()
         {
-            return databaseContext.Users.ToList();
+            return dbContext.Users.ToList();
         }
 
         // GET api/user/5
         [HttpGet("{id}")]
         public User Get(int id)
         {
-            return databaseContext.Users.Find(id);
+            return dbContext.Users.Find(id);
         }
 
         // POST api/user
@@ -41,8 +41,8 @@ namespace UserService.Controllers
         {
             try
             {
-                databaseContext.Users.Add(model);
-                databaseContext.SaveChanges();
+                dbContext.Users.Add(model);
+                dbContext.SaveChanges();
                 return StatusCode(StatusCodes.Status201Created, model);
             }
             catch (Exception ex)
@@ -53,16 +53,37 @@ namespace UserService.Controllers
 
         // PUT api/user/5
         [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        public IActionResult Put(int id, [FromBody] User user)
         {
-            // todo
+            try
+            {
+                dbContext.Users.Update(user);
+                dbContext.SaveChanges();
+                return StatusCode(StatusCodes.Status201Created, user);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
         }
 
         // DELETE api/user/5
         [HttpDelete("{id}")]
-        public void Delete(int id)
+        public IActionResult Delete(int id)
         {
-            // todo
+            try
+            {
+                var userToRemove = dbContext.Users.FirstOrDefault(x => x.Id == id);
+                if (userToRemove == null)
+                    return StatusCode(StatusCodes.Status204NoContent);
+                dbContext.Users.Remove(userToRemove);
+                dbContext.SaveChanges();
+                return StatusCode(StatusCodes.Status201Created, userToRemove);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+            }
         }
     }
 }
