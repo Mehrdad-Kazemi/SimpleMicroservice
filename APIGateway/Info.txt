@@ -1,0 +1,1 @@
+﻿use ocelot.json to define the routing to all microservices
