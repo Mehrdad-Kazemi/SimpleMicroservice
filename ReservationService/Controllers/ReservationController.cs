@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -14,25 +15,25 @@ namespace ReservationService.Controllers
     [ApiController]
     public class ReservationController : ControllerBase
     {
-        private readonly DatabaseContext _context;
+        private readonly DatabaseContext dbContext;
 
-        public ReservationController(DatabaseContext context)
+        public ReservationController()
         {
-            _context = context;
+            dbContext = new DatabaseContext();
         }
 
         // GET: api/Reservation
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Reservation>>> GetReservations()
         {
-            return await _context.Reservations.ToListAsync();
+            return await dbContext.Reservations.ToListAsync();
         }
 
         // GET: api/Reservation/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Reservation>> GetReservation(int id)
         {
-            var reservation = await _context.Reservations.FindAsync(id);
+            var reservation = await dbContext.Reservations.FindAsync(id);
 
             if (reservation == null)
             {
@@ -53,11 +54,11 @@ namespace ReservationService.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(reservation).State = EntityState.Modified;
+            dbContext.Entry(reservation).State = EntityState.Modified;
 
             try
             {
-                await _context.SaveChangesAsync();
+                await dbContext.SaveChangesAsync();
             }
             catch (DbUpdateConcurrencyException)
             {
@@ -80,8 +81,8 @@ namespace ReservationService.Controllers
         [HttpPost]
         public async Task<ActionResult<Reservation>> PostReservation(Reservation reservation)
         {
-            _context.Reservations.Add(reservation);
-            await _context.SaveChangesAsync();
+            dbContext.Reservations.Add(reservation);
+            await dbContext.SaveChangesAsync();
 
             return CreatedAtAction("GetReservation", new { id = reservation.Id }, reservation);
         }
@@ -90,21 +91,37 @@ namespace ReservationService.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult<Reservation>> DeleteReservation(int id)
         {
-            var reservation = await _context.Reservations.FindAsync(id);
+            var reservation = await dbContext.Reservations.FindAsync(id);
             if (reservation == null)
             {
                 return NotFound();
             }
 
-            _context.Reservations.Remove(reservation);
-            await _context.SaveChangesAsync();
+            dbContext.Reservations.Remove(reservation);
+            await dbContext.SaveChangesAsync();
 
             return reservation;
         }
 
+        [HttpGet("reserved/{id}")]
+        public async Task<ActionResult<bool>> IsBookReserved(int id)
+        {
+            try
+            {
+                using HttpClient client = new HttpClient();
+                HttpResponseMessage response = await client.GetAsync("http://localhost:61041/api/book/reserved/" + id);
+                Console.WriteLine(response.IsSuccessStatusCode ? "Succes" : "Failure");
+                return await Task.FromResult(response.IsSuccessStatusCode);
+            }
+            catch (Exception ex)
+            {
+                throw ex;
+            }
+        }
+
         private bool ReservationExists(int id)
         {
-            return _context.Reservations.Any(e => e.Id == id);
+            return dbContext.Reservations.Any(e => e.Id == id);
         }
     }
 }
