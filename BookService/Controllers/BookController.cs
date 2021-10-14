@@ -6,6 +6,7 @@ using BookService.Database;
 using BookService.Database.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -24,26 +25,26 @@ namespace BookService.Controllers
 
         // GET: api/book
         [HttpGet]
-        public IEnumerable<Book> Get()
+        public async Task<IEnumerable<Book>> Get()
         {
-            return dbContext.Books.ToList();
+            return await dbContext.Books.ToListAsync();
         }
 
         // GET api/book/5
         [HttpGet("{id}")]
-        public Book Get(int id)
+        public async Task<Book> Get(int id)
         {
-            return dbContext.Books.FirstOrDefault(x => x.Id == id);
+            return await dbContext.Books.FirstOrDefaultAsync(x => x.Id == id);
         }
 
         // POST api/book
         [HttpPost]
-        public IActionResult Post([FromBody] Book book)
+        public async Task<IActionResult> Post([FromBody] Book book)
         {
             try
             {
                 dbContext.Books.Add(book);
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
                 return StatusCode(StatusCodes.Status201Created, book);
             }
             catch (Exception ex)
@@ -54,12 +55,12 @@ namespace BookService.Controllers
 
         // PUT api/book/5
         [HttpPut("{id}")]
-        public IActionResult Put(int id, [FromBody] Book book)
+        public async Task<IActionResult> Put(int id, [FromBody] Book book)
         {
             try
             {
                 dbContext.Books.Update(book);
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
                 return StatusCode(StatusCodes.Status201Created, book);
             }
             catch (Exception ex)
@@ -70,21 +71,27 @@ namespace BookService.Controllers
 
         // DELETE api/book/5
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             try
             {
-                var bookToRemove = dbContext.Books.FirstOrDefault(x => x.Id == id);
+                var bookToRemove = await dbContext.Books.FirstOrDefaultAsync(x => x.Id == id);
                 if (bookToRemove == null)
                     return StatusCode(StatusCodes.Status204NoContent);
                 dbContext.Books.Remove(bookToRemove);
-                dbContext.SaveChanges();
+                await dbContext.SaveChangesAsync();
                 return StatusCode(StatusCodes.Status201Created, bookToRemove);
             }
             catch (Exception ex)
             {
                 return StatusCode(StatusCodes.Status500InternalServerError, ex);
             }
+        }
+
+        [HttpGet("reserved/{id}")]
+        public async Task<bool> GetIsBookReserved(int id)
+        {
+            return (await dbContext.Books.FirstOrDefaultAsync(x => x.Id == id)).IsReserved;
         }
     }
 }
